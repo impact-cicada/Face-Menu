@@ -79,7 +79,7 @@
 				var tgtX = e.clientX - offsetX;
 				var tgtY = e.clientY - offsetY;
 
-				// オブジェクト上の座標かどうかを判定
+				// 画像上の座標かどうかを判定
 				for(var i in layers){
 					// TODO order考慮
 					if(layers[i].has(tgtX, tgtY)){
@@ -106,6 +106,22 @@
 					layers[dragLayer].cvX = tgtX + relX;
 					layers[dragLayer].cvY = tgtY + relY;
 					drawRect();
+				}
+				// ドラッグ中以外
+				else{
+					// 画像上の座標かどうかを判定
+					var onImg = false;
+					for(var i in layers){
+						if(layers[i].has(tgtX, tgtY)){
+							onImg = true;
+							break;
+						}
+					}
+					if(onImg){
+						document.body.style.cursor='move';
+					}else{
+						document.body.style.cursor='auto';
+					}
 				}
 			}
 
