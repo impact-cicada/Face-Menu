@@ -1,14 +1,5 @@
-//// --------------- Layer Class --------------- ////
-var Layer = function(src, cvX, cvY, cvW, cvH){
-	this.image = new Image();
-	this.image.src = src;
-	this.image.addEventListener('load', onLoad, false);
-	this.cvX = cvX;
-	this.cvY = cvY;
-	this.cvW = cvW;
-	this.cvH = cvH;
-};
-
+//// --------------- Global --------------- ////
+// 画像ロードイベント
 function onLoad(){
 	if(cvMgr.loadedCount == cvMgr.layers.length){
 		cvMgr.drawLayers();
@@ -16,39 +7,7 @@ function onLoad(){
 	cvMgr.loadedCount++;
 };
 
-// 指定座標が画像描画領域内にあるか判定
-//  true :領域内
-//  false:領域外
-Layer.prototype.has = function(tgtX, tgtY){
-	return (this.cvX < tgtX && tgtX < (this.cvX + this.cvW) && this.cvY < tgtY && tgtY < (this.cvY + this.cvH))
-};
-
-//// --------------- CanvasManager Class --------------- ////
-var CanvasManager = function(){
-	this.loadedCount = 1;
-	this.canvas = document.getElementById('canvas');
-	this.context = this.canvas.getContext('2d');
-	this.layers = [];
-	this.dragLayer = -1;
-	this.relX = 0;
-	this.relY = 0;
-
-	this.canvas.addEventListener('mousedown', onDown, false);
-	this.canvas.addEventListener('mousemove', onMove, false);
-	this.canvas.addEventListener('mouseup', onUp, false);
-};
-
-//// --------------- 全レイヤー描画 --------------- ////
-CanvasManager.prototype.drawLayers = function(){
-	var layer;
-	for(var i in this.layers){
-		layer = this.layers[i];
-		console.log('drawLayers() ' + layer.image.src + ' x:'+layer.cvX + ' y:'+layer.cvY + ' w:'+layer.cvW + ' h:'+layer.cvH);
-		this.context.drawImage(layer.image, layer.cvX, layer.cvY, layer.cvW, layer.cvH);
-	}
-};
-
-//// --------------- マウスダウン --------------- ////
+// マウスダウン
 function onDown(e) {
 	// キャンバスの左上端の座標を取得
 	var offsetX = cvMgr.canvas.getBoundingClientRect().left;
@@ -69,7 +28,7 @@ function onDown(e) {
 	}
 };
 
-//// --------------- マウス移動 --------------- ////
+// マウス移動
 function onMove (e) {
 	// キャンバスの左上端の座標を取得
 	var offsetX = cvMgr.canvas.getBoundingClientRect().left;
@@ -103,14 +62,57 @@ function onMove (e) {
 	}
 };
 
-//// --------------- マウスアップ --------------- ////
+// マウスアップ
 function onUp(e) {
 	cvMgr.dragLayer = -1; // ドラッグ終了
 };
 
-//// --------------- 再描画 --------------- ////
+//// --------------- Layer Class --------------- ////
+var Layer = function(src, cvX, cvY, cvW, cvH){
+	this.image = new Image();
+	this.image.src = src;
+	this.image.addEventListener('load', onLoad, false);
+	this.cvX = cvX;
+	this.cvY = cvY;
+	this.cvW = cvW;
+	this.cvH = cvH;
+};
+
+// 指定座標が画像描画領域内にあるか判定
+//  true :領域内
+//  false:領域外
+Layer.prototype.has = function(tgtX, tgtY){
+	return (this.cvX < tgtX && tgtX < (this.cvX + this.cvW) && this.cvY < tgtY && tgtY < (this.cvY + this.cvH))
+};
+
+//// --------------- CanvasManager Class --------------- ////
+var CanvasManager = function(){
+	this.loadedCount = 1;
+	this.canvas = document.getElementById('canvas');
+	this.context = this.canvas.getContext('2d');
+	this.layers = [];
+	this.dragLayer = -1;
+	this.relX = 0;
+	this.relY = 0;
+
+	this.canvas.addEventListener('mousedown', onDown, false);
+	this.canvas.addEventListener('mousemove', onMove, false);
+	this.canvas.addEventListener('mouseup', onUp, false);
+};
+
+// 再描画
 CanvasManager.prototype.repaint = function() {
 	this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // キャンバスをクリア
 	this.drawLayers();
+};
+
+// 全レイヤー描画
+CanvasManager.prototype.drawLayers = function(){
+	var layer;
+	for(var i in this.layers){
+		layer = this.layers[i];
+		console.log('drawLayers() ' + layer.image.src + ' x:'+layer.cvX + ' y:'+layer.cvY + ' w:'+layer.cvW + ' h:'+layer.cvH);
+		this.context.drawImage(layer.image, layer.cvX, layer.cvY, layer.cvW, layer.cvH);
+	}
 };
 
