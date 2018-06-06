@@ -1,9 +1,8 @@
 //// --------------- Layer Class --------------- ////
-var Layer = function(src, order, cvX, cvY, cvW, cvH){
+var Layer = function(src, cvX, cvY, cvW, cvH){
 	this.image = new Image();
 	this.image.src = src;
 	this.image.addEventListener('load', onLoad, false);
-	this.order = order;
 	this.cvX = cvX;
 	this.cvY = cvY;
 	this.cvW = cvW;
