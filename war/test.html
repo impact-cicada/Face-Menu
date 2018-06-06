@@ -6,6 +6,7 @@
 		<canvas id="canvas" width="600" height="400" style="border: 1px solid;"></canvas>
 		<script type="text/javascript" src="LayerCanvas.js"></script>
 		<script>
+			var cvMgr = new CanvasManager();
 			var init = function(){
 				var srcs = [
 					'1.png',
@@ -18,7 +19,7 @@
 				var w = 150;
 				var h = 100;
 				for(var i in srcs){
-					layers[i] = new Layer(srcs[i], i, x, y, w, h);
+					cvMgr.layers[i] = new Layer(srcs[i], i, x, y, w, h);
 					x += 50;
 					y += 70;
 				}
