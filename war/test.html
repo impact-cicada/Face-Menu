@@ -19,7 +19,7 @@
 				var w = 150;
 				var h = 100;
 				for(var i in srcs){
-					cvMgr.layers[i] = new Layer(srcs[i], x, y, w, h);
+					cvMgr.addLayer(srcs[i], x, y, w, h);
 					x += 50;
 					y += 70;
 				}

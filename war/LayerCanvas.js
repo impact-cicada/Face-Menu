@@ -100,6 +100,11 @@ var CanvasManager = function(){
 	this.canvas.addEventListener('mouseup', onUp, false);
 };
 
+// 画像登録
+CanvasManager.prototype.addLayer = function(srcs, x, y, w, h){
+	this.layers.push(new Layer(srcs, x, y, w, h));
+};
+
 // 再描画
 CanvasManager.prototype.repaint = function() {
 	this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // キャンバスをクリア
