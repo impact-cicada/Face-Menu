@@ -16,12 +16,6 @@ function onLoad(){
 	cvMgr.loadedCount++;
 };
 
-// 画像を描画
-Layer.prototype.draw = function() {
-	console.log('draw() ' + this.image.src + ' x:'+this.cvX + ' y:'+this.cvY + ' w:'+this.cvW + ' h:'+this.cvH);
-	cvMgr.context.drawImage(this.image, this.cvX, this.cvY, this.cvW, this.cvH);
-};
-
 // 指定座標が画像描画領域内にあるか判定
 //  true :領域内
 //  false:領域外
@@ -46,8 +40,11 @@ var CanvasManager = function(){
 
 //// --------------- 全レイヤー描画 --------------- ////
 CanvasManager.prototype.drawLayers = function(){
+	var layer;
 	for(var i in this.layers){
-		this.layers[i].draw();
+		layer = this.layers[i];
+		console.log('drawLayers() ' + layer.image.src + ' x:'+layer.cvX + ' y:'+layer.cvY + ' w:'+layer.cvW + ' h:'+layer.cvH);
+		this.context.drawImage(layer.image, layer.cvX, layer.cvY, layer.cvW, layer.cvH);
 	}
 };
 
@@ -86,7 +83,7 @@ function onMove (e) {
 	if(0 <= cvMgr.dragLayer){
 		cvMgr.layers[cvMgr.dragLayer].cvX = tgtX + cvMgr.relX;
 		cvMgr.layers[cvMgr.dragLayer].cvY = tgtY + cvMgr.relY;
-		cvMgr.drawRect();
+		cvMgr.repaint();
 	}
 	// ドラッグ中以外
 	else{
@@ -112,7 +109,8 @@ function onUp(e) {
 };
 
 //// --------------- 再描画 --------------- ////
-CanvasManager.prototype.drawRect = function() {
+CanvasManager.prototype.repaint = function() {
 	this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // キャンバスをクリア
 	this.drawLayers();
 };
+
