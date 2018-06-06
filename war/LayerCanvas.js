@@ -55,8 +55,7 @@ function onDown(e) {
 	var tgtY = e.clientY - offsetY;
 
 	// 画像上の座標かどうかを判定
-	for(var i in layers){
-		// TODO order考慮
+	for(var i = (layers.length - 1); 0 <= i; i--){
 		if(layers[i].has(tgtX, tgtY)){
 			dragLayer = i; // ドラッグ開始
 			relX = layers[i].cvX - tgtX;
@@ -86,7 +85,7 @@ function onMove(e) {
 	else{
 		// 画像上の座標かどうかを判定
 		var onImg = false;
-		for(var i in layers){
+		for(var i = (layers.length - 1); 0 <= i; i--){
 			if(layers[i].has(tgtX, tgtY)){
 				onImg = true;
 				break;
