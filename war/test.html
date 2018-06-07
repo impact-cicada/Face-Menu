@@ -3,10 +3,10 @@
 		<meta charset="utf-8">
 	</head>
 	<body onLoad="init()">
-		<canvas id="canvas" width="600" height="400" style="border: 1px solid;"></canvas>
+		<canvas id="canvas" style="border: 1px solid;"></canvas>
 		<script type="text/javascript" src="LayerCanvas.js"></script>
 		<script>
-			var cvMgr = new CanvasManager();
+			var cvMgr = new CanvasManager(600, 400);
 			var init = function(){
 				var srcs = [
 					'1.png',

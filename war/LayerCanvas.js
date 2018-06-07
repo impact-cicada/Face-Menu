@@ -86,7 +86,7 @@ Layer.prototype.has = function(tgtX, tgtY){
 };
 
 //// --------------- CanvasManager Class --------------- ////
-var CanvasManager = function(){
+var CanvasManager = function(width, height){
 	this.loadedCount = 1;
 	this.canvas = document.getElementById('canvas');
 	this.context = this.canvas.getContext('2d');
@@ -95,6 +95,8 @@ var CanvasManager = function(){
 	this.relX = 0;
 	this.relY = 0;
 
+	this.canvas.setAttribute("width", width);
+	this.canvas.setAttribute("height", height);
 	this.canvas.addEventListener('mousedown', onDown, false);
 	this.canvas.addEventListener('mousemove', onMove, false);
 	this.canvas.addEventListener('mouseup', onUp, false);
