@@ -4,7 +4,13 @@
 		<link rel="stylesheet" type="text/css" href="edit.css">
 	</head>
 	<body onLoad="init()">
-		<canvas id="canvas"></canvas>
+		<main>
+			<canvas id="canvas"></canvas>
+			<div>
+				幅：<input type="number" min="200" max="800" step="10" id="canvas_width">
+				高さ：<input type="number" min="200" max="800" step="10" id="canvas_height">
+			</div>
+		</main>
 		<script type="text/javascript" src="LayerCanvas.js"></script>
 		<script>
 			var cvMgr = new CanvasManager(600, 400);

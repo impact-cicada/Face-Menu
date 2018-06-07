@@ -1,4 +1,22 @@
-canvas#canvas {
-	border: 1px solid;
+main {
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
 }
 
+canvas#canvas {
+	border: 1px solid;
+	margin: 5px;
+}
+
+main div {
+	width: 300;
+	height:600;
+	border: 1px solid;
+	margin: 5px;
+	padding: 5px;
+}
+
+input#canvas_width, #canvas_height {
+	width: 80;
+}

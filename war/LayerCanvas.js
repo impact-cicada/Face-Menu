@@ -67,6 +67,18 @@ function onUp(e) {
 	cvMgr.dragLayer = -1; // ドラッグ終了
 };
 
+function onChange_spinCvW() {
+	var value = cvMgr.spinCvW.value;
+	cvMgr.canvas.setAttribute("width", value);
+	cvMgr.repaint();
+};
+
+function onChange_spinCvH() {
+	var value = cvMgr.spinCvH.value;
+	cvMgr.canvas.setAttribute("height", value);
+	cvMgr.repaint();
+};
+
 //// --------------- Layer Class --------------- ////
 var Layer = function(src, cvX, cvY, cvW, cvH){
 	this.image = new Image();
@@ -89,6 +101,8 @@ Layer.prototype.has = function(tgtX, tgtY){
 var CanvasManager = function(width, height){
 	this.loadedCount = 1;
 	this.canvas = document.getElementById('canvas');
+	this.spinCvW = document.getElementById('canvas_width');
+	this.spinCvH = document.getElementById('canvas_height');
 	this.context = this.canvas.getContext('2d');
 	this.layers = [];
 	this.dragLayer = -1;
@@ -100,6 +114,10 @@ var CanvasManager = function(width, height){
 	this.canvas.addEventListener('mousedown', onDown, false);
 	this.canvas.addEventListener('mousemove', onMove, false);
 	this.canvas.addEventListener('mouseup', onUp, false);
+	this.spinCvW.value = width;
+	this.spinCvW.addEventListener('change', onChange_spinCvW, false);
+	this.spinCvH.value = height;
+	this.spinCvH.addEventListener('change', onChange_spinCvH, false);
 };
 
 // 画像登録
