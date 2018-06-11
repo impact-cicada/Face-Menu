@@ -69,15 +69,17 @@ function onUp(e) {
 
 // 幅スピンボックス変化
 function onChange_spinCvW() {
-	var value = cvMgr.spinCvW.value;
-	cvMgr.canvas.setAttribute("width", value);
+	var width = cvMgr.spinTileW.value;
+	var numX = cvMgr.spinNumX.value;
+	cvMgr.canvas.setAttribute("width", (width * numX));
 	cvMgr.repaint();
 };
 
 // 高さスピンボックス変化
 function onChange_spinCvH() {
-	var value = cvMgr.spinCvH.value;
-	cvMgr.canvas.setAttribute("height", value);
+	var height = cvMgr.spinTileH.value;
+	var numY = cvMgr.spinNumY.value;
+	cvMgr.canvas.setAttribute("height", (height * numY));
 	cvMgr.repaint();
 };
 
@@ -100,26 +102,32 @@ Layer.prototype.has = function(tgtX, tgtY){
 };
 
 //// --------------- CanvasManager Class --------------- ////
-var CanvasManager = function(width, height){
+var CanvasManager = function(width, height, numX, numY){
 	this.loadedCount = 1;
 	this.canvas = document.getElementById('canvas');
-	this.spinCvW = document.getElementById('canvas_width');
-	this.spinCvH = document.getElementById('canvas_height');
+	this.spinTileW = document.getElementById('tile_width');
+	this.spinTileH = document.getElementById('tile_height');
+	this.spinNumX = document.getElementById('num_x');
+	this.spinNumY = document.getElementById('num_y');
 	this.context = this.canvas.getContext('2d');
 	this.layers = [];
 	this.dragLayer = -1;
 	this.relX = 0;
 	this.relY = 0;
 
-	this.canvas.setAttribute("width", width);
-	this.canvas.setAttribute("height", height);
+	this.canvas.setAttribute("width", (width * numX));
+	this.canvas.setAttribute("height", (height * numY));
 	this.canvas.addEventListener('mousedown', onDown, false);
 	this.canvas.addEventListener('mousemove', onMove, false);
 	this.canvas.addEventListener('mouseup', onUp, false);
-	this.spinCvW.value = width;
-	this.spinCvW.addEventListener('change', onChange_spinCvW, false);
-	this.spinCvH.value = height;
-	this.spinCvH.addEventListener('change', onChange_spinCvH, false);
+	this.spinTileW.value = width;
+	this.spinTileW.addEventListener('change', onChange_spinCvW, false);
+	this.spinTileH.value = height;
+	this.spinTileH.addEventListener('change', onChange_spinCvH, false);
+	this.spinNumX.value = numX;
+	this.spinNumX.addEventListener('change', onChange_spinCvW, false);
+	this.spinNumY.value = numY;
+	this.spinNumY.addEventListener('change', onChange_spinCvH, false);
 };
 
 // 画像登録

@@ -7,13 +7,16 @@
 		<main>
 			<canvas id="canvas"></canvas>
 			<div>
-				幅：<input type="number" min="200" max="800" step="10" id="canvas_width">
-				高さ：<input type="number" min="200" max="800" step="10" id="canvas_height">
+				１マスのサイズ<br>
+				幅：<input type="number" min="50" max="200" step="10" id="tile_width" class="canvas_size">
+				高さ：<input type="number" min="50" max="200" step="10" id="tile_height" class="canvas_size"><br>
+				横：<input type="number" min="1" max="8" step="1" id="num_x" class="canvas_size">
+				縦：<input type="number" min="1" max="8" step="1" id="num_y" class="canvas_size">
 			</div>
 		</main>
 		<script type="text/javascript" src="LayerCanvas.js"></script>
 		<script>
-			var cvMgr = new CanvasManager(600, 400);
+			var cvMgr = new CanvasManager(100, 100, 5, 4);
 			var init = function(){
 				var srcs = [
 					'1.png',

@@ -17,6 +17,6 @@ main div {
 	padding: 5px;
 }
 
-input#canvas_width, #canvas_height {
+input.canvas_size {
 	width: 80;
 }
