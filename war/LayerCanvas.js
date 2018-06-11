@@ -2,7 +2,7 @@
 // 画像ロードイベント
 function onLoad(){
 	if(cvMgr.loadedCount == cvMgr.layers.length){
-		cvMgr.drawLayers();
+		cvMgr.repaint();
 	}
 	cvMgr.loadedCount++;
 };
@@ -67,12 +67,14 @@ function onUp(e) {
 	cvMgr.dragLayer = -1; // ドラッグ終了
 };
 
+// 幅スピンボックス変化
 function onChange_spinCvW() {
 	var value = cvMgr.spinCvW.value;
 	cvMgr.canvas.setAttribute("width", value);
 	cvMgr.repaint();
 };
 
+// 高さスピンボックス変化
 function onChange_spinCvH() {
 	var value = cvMgr.spinCvH.value;
 	cvMgr.canvas.setAttribute("height", value);
