@@ -67,6 +67,11 @@ function onUp(e) {
 	cvMgr.dragLayer = -1; // ドラッグ終了
 };
 
+// 文章フォントサイズ スピンボックス変化
+function onChange_spinStc() {
+	cvMgr.repaint();
+}
+
 // 幅スピンボックス変化
 function onChange_spinCvW() {
 	var width = cvMgr.spinTileW.value;
@@ -102,9 +107,11 @@ Layer.prototype.has = function(tgtX, tgtY){
 };
 
 //// --------------- CanvasManager Class --------------- ////
-var CanvasManager = function(width, height, numX, numY){
+var CanvasManager = function(stcSize, width, height, numX, numY){
+	this.sentence = 'あなたの気分に合った顔の表情の番号に〇をつけてください。';
 	this.loadedCount = 1;
 	this.canvas = document.getElementById('canvas');
+	this.spinStc = document.getElementById('stc_size');
 	this.spinTileW = document.getElementById('tile_width');
 	this.spinTileH = document.getElementById('tile_height');
 	this.spinNumX = document.getElementById('num_x');
@@ -120,6 +127,8 @@ var CanvasManager = function(width, height, numX, numY){
 	this.canvas.addEventListener('mousedown', onDown, false);
 	this.canvas.addEventListener('mousemove', onMove, false);
 	this.canvas.addEventListener('mouseup', onUp, false);
+	this.spinStc.value = stcSize;
+	this.spinStc.addEventListener('change', onChange_spinStc, false);
 	this.spinTileW.value = width;
 	this.spinTileW.addEventListener('change', onChange_spinCvW, false);
 	this.spinTileH.value = height;
@@ -139,6 +148,7 @@ CanvasManager.prototype.addLayer = function(srcs, x, y, w, h){
 CanvasManager.prototype.repaint = function() {
 	this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // キャンバスをクリア
 	this.drawLayers();
+	this.drawSentence();
 };
 
 // 全レイヤー描画
@@ -151,3 +161,9 @@ CanvasManager.prototype.drawLayers = function(){
 	}
 };
 
+// 文章描画
+CanvasManager.prototype.drawSentence = function(){
+	this.context.font = this.spinStc.value + 'px serif';
+	this.context.textAlign = 'left';
+	this.context.fillText(this.sentence, 0, this.spinStc.value);
+}
