@@ -17,9 +17,11 @@ function onDown(e) {
 	var tgtX = e.clientX - offsetX;
 	var tgtY = e.clientY - offsetY;
 
+	var stcSize = cvMgr.getStcHeight();
+
 	// 画像上の座標かどうかを判定
 	for(var i = (cvMgr.layers.length - 1); 0 <= i; i--){
-		if(cvMgr.layers[i].has(tgtX, tgtY)){
+		if(cvMgr.layers[i].has(tgtX, (tgtY - stcSize))){
 			cvMgr.dragLayer = i; // ドラッグ開始
 			cvMgr.relX = cvMgr.layers[i].cvX - tgtX;
 			cvMgr.relY = cvMgr.layers[i].cvY - tgtY;
@@ -38,6 +40,8 @@ function onMove (e) {
 	var tgtX = e.clientX - offsetX;
 	var tgtY = e.clientY - offsetY;
 
+	var stcSize = cvMgr.getStcHeight();
+
 	// ドラッグが開始されていればオブジェクトの座標を更新して再描画
 	if(0 <= cvMgr.dragLayer){
 		cvMgr.layers[cvMgr.dragLayer].cvX = tgtX + cvMgr.relX;
@@ -49,7 +53,7 @@ function onMove (e) {
 		// 画像上の座標かどうかを判定
 		var onImg = false;
 		for(var i = (cvMgr.layers.length - 1); 0 <= i; i--){
-			if(cvMgr.layers[i].has(tgtX, tgtY)){
+			if(cvMgr.layers[i].has(tgtX, (tgtY - stcSize))){
 				onImg = true;
 				break;
 			}
@@ -76,7 +80,7 @@ function onChange_spinStc() {
 function onChange_spinCvW() {
 	var width = cvMgr.spinTileW.value;
 	var numX = cvMgr.spinNumX.value;
-	cvMgr.canvas.setAttribute("width", (width * numX));
+	cvMgr.setWidth(width, numX);
 	cvMgr.repaint();
 };
 
@@ -84,7 +88,8 @@ function onChange_spinCvW() {
 function onChange_spinCvH() {
 	var height = cvMgr.spinTileH.value;
 	var numY = cvMgr.spinNumY.value;
-	cvMgr.canvas.setAttribute("height", (height * numY));
+	var stcSize = cvMgr.getStcHeight();
+	cvMgr.setHeight(height, numY, stcSize);
 	cvMgr.repaint();
 };
 
@@ -122,8 +127,8 @@ var CanvasManager = function(stcSize, width, height, numX, numY){
 	this.relX = 0;
 	this.relY = 0;
 
-	this.canvas.setAttribute("width", (width * numX));
-	this.canvas.setAttribute("height", (height * numY));
+	this.setWidth(width, numX);
+	this.setHeight(height, numY, stcSize);
 	this.canvas.addEventListener('mousedown', onDown, false);
 	this.canvas.addEventListener('mousemove', onMove, false);
 	this.canvas.addEventListener('mouseup', onUp, false);
@@ -139,6 +144,21 @@ var CanvasManager = function(stcSize, width, height, numX, numY){
 	this.spinNumY.addEventListener('change', onChange_spinCvH, false);
 };
 
+// キャンバス幅設定
+CanvasManager.prototype.setWidth = function(tile_w, tile_x){
+	this.canvas.setAttribute("width", (tile_w * tile_x));
+};
+
+// キャンバス高さ設定
+CanvasManager.prototype.setHeight = function(tile_h, tile_y, stc_pix){
+	this.canvas.setAttribute("height", (tile_h * tile_y + stc_pix));
+};
+
+// 文章高さ取得
+CanvasManager.prototype.getStcHeight = function(){
+	return Number(this.spinStc.value) + 2;
+}
+
 // 画像登録
 CanvasManager.prototype.addLayer = function(srcs, x, y, w, h){
 	this.layers.push(new Layer(srcs, x, y, w, h));
@@ -153,11 +173,12 @@ CanvasManager.prototype.repaint = function() {
 
 // 全レイヤー描画
 CanvasManager.prototype.drawLayers = function(){
+	var stcSize = this.getStcHeight();
 	var layer;
 	for(var i in this.layers){
 		layer = this.layers[i];
-		console.log('drawLayers() ' + layer.image.src + ' x:'+layer.cvX + ' y:'+layer.cvY + ' w:'+layer.cvW + ' h:'+layer.cvH);
-		this.context.drawImage(layer.image, layer.cvX, layer.cvY, layer.cvW, layer.cvH);
+		console.log('drawLayers() ' + layer.image.src + ' x:'+layer.cvX + ' y:'+(layer.cvY + stcSize) + ' w:'+layer.cvW + ' h:'+layer.cvH);
+		this.context.drawImage(layer.image, layer.cvX, (layer.cvY + stcSize), layer.cvW, layer.cvH);
 	}
 };
 
