@@ -17,6 +17,6 @@ main div {
 	padding: 5px;
 }
 
-input.canvas_size {
+input.canvas_size, input#stc_size {
 	width: 80;
 }

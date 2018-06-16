@@ -1,4 +1,6 @@
+////////////////////////////////////////////////
 //// --------------- Global --------------- ////
+////////////////////////////////////////////////
 // 画像ロードイベント
 function onLoad(){
 	if(cvMgr.loadedCount == cvMgr.layers.length){
@@ -93,7 +95,58 @@ function onChange_spinCvH() {
 	cvMgr.repaint();
 };
 
+// ダウンロードボタンクリック
+function onClick_buttonDlImg() {
+	console.log("onClick_buttonDlImg");
+	var fileName = "face.png";
+	var base64 = cvMgr.canvas.toDataURL();
+	var blob = convBase64toBlob(base64);
+	saveBlob(blob, fileName);
+}
+
+// Base64変換
+function convBase64toBlob(base64) {
+	// [0]:データ形式(data:image/png;base64)
+	// [1]:base64データ
+	var tmp = base64.split(',');
+
+	// base64データをデコード
+	var data = atob(tmp[1]);
+
+	// image/png部分を抽出
+	var mime = tmp[0].split(':')[1].split(';')[0]
+
+	// バイナリ->整数変換
+	var buf = new Uint8Array(data.length);
+	for(var i = 0; i < data.length; i++){
+		buf[i] = data.charCodeAt(i);
+	}
+
+	// Blobデータを作成
+	var blob = new Blob([buf], { type: mime });
+	return blob;
+}
+
+// 画像ダウンロード
+function saveBlob(blob, fileName) {
+	// ダウンロードURL作成
+	var url = (window.URL || window.webkitURL);
+	var dataUrl = url.createObjectURL(blob);
+
+	// クリックイベント作成
+	var event = document.createEvent("MouseEvents");
+	event.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+	// a要素作成
+	var a = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+	a.href = dataUrl;
+	a.download = fileName;
+	a.dispatchEvent(event);
+}
+
+/////////////////////////////////////////////////////
 //// --------------- Layer Class --------------- ////
+/////////////////////////////////////////////////////
 var Layer = function(src, cvX, cvY, cvW, cvH){
 	this.image = new Image();
 	this.image.src = src;
@@ -111,7 +164,9 @@ Layer.prototype.has = function(tgtX, tgtY){
 	return (this.cvX < tgtX && tgtX < (this.cvX + this.cvW) && this.cvY < tgtY && tgtY < (this.cvY + this.cvH))
 };
 
+/////////////////////////////////////////////////////////////
 //// --------------- CanvasManager Class --------------- ////
+/////////////////////////////////////////////////////////////
 var CanvasManager = function(stcSize, width, height, numX, numY){
 	this.sentence = 'あなたの気分に合った顔の表情の番号に〇をつけてください。';
 	this.loadedCount = 1;
@@ -121,6 +176,7 @@ var CanvasManager = function(stcSize, width, height, numX, numY){
 	this.spinTileH = document.getElementById('tile_height');
 	this.spinNumX = document.getElementById('num_x');
 	this.spinNumY = document.getElementById('num_y');
+	this.buttonDlImg = document.getElementById('dl_img');
 	this.context = this.canvas.getContext('2d');
 	this.layers = [];
 	this.dragLayer = -1;
@@ -142,6 +198,7 @@ var CanvasManager = function(stcSize, width, height, numX, numY){
 	this.spinNumX.addEventListener('change', onChange_spinCvW, false);
 	this.spinNumY.value = numY;
 	this.spinNumY.addEventListener('change', onChange_spinCvH, false);
+	this.buttonDlImg.addEventListener('click', onClick_buttonDlImg, false);
 };
 
 // キャンバス幅設定
