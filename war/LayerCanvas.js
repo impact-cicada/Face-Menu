@@ -224,8 +224,15 @@ CanvasManager.prototype.addLayer = function(srcs, x, y, w, h){
 // 再描画
 CanvasManager.prototype.repaint = function() {
 	this.context.clearRect(0, 0, this.canvas.width, this.canvas.height); // キャンバスをクリア
+	this.drawBackground();
 	this.drawLayers();
 	this.drawSentence();
+};
+
+// 背景描画
+CanvasManager.prototype.drawBackground = function(){
+	this.context.fillStyle = 'rgb(255,255,255)';
+	this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 };
 
 // 全レイヤー描画
