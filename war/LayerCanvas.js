@@ -104,6 +104,12 @@ function onClick_buttonDlImg() {
 	saveBlob(blob, fileName);
 }
 
+// 自動配置ボタンクリック
+function onClick_buttonAutoArg() {
+	console.log("onClick_buttonAutoArg");
+	cvMgr.arrangeAutoLayers();
+}
+
 // Base64変換
 function convBase64toBlob(base64) {
 	// [0]:データ形式(data:image/png;base64)
@@ -164,6 +170,12 @@ Layer.prototype.has = function(tgtX, tgtY){
 	return (this.cvX < tgtX && tgtX < (this.cvX + this.cvW) && this.cvY < tgtY && tgtY < (this.cvY + this.cvH))
 };
 
+// 座標設定
+Layer.prototype.setPos = function(newX, newY){
+	this.cvX = newX;
+	this.cvY = newY;
+};
+
 /////////////////////////////////////////////////////////////
 //// --------------- CanvasManager Class --------------- ////
 /////////////////////////////////////////////////////////////
@@ -176,6 +188,7 @@ var CanvasManager = function(stcSize, width, height, numX, numY){
 	this.spinTileH = document.getElementById('tile_height');
 	this.spinNumX = document.getElementById('num_x');
 	this.spinNumY = document.getElementById('num_y');
+	this.buttonAutoArg = document.getElementById('auto_arg');
 	this.buttonDlImg = document.getElementById('dl_img');
 	this.context = this.canvas.getContext('2d');
 	this.layers = [];
@@ -198,6 +211,7 @@ var CanvasManager = function(stcSize, width, height, numX, numY){
 	this.spinNumX.addEventListener('change', onChange_spinCvW, false);
 	this.spinNumY.value = numY;
 	this.spinNumY.addEventListener('change', onChange_spinCvH, false);
+	this.buttonAutoArg.addEventListener('click', onClick_buttonAutoArg, false);
 	this.buttonDlImg.addEventListener('click', onClick_buttonDlImg, false);
 };
 
@@ -219,6 +233,34 @@ CanvasManager.prototype.getStcHeight = function(){
 // 画像登録
 CanvasManager.prototype.addLayer = function(srcs, x, y, w, h){
 	this.layers.push(new Layer(srcs, x, y, w, h));
+};
+
+// 自動配置
+// スピンボックスの設定に従って画像を敷き詰める
+// 画像毎のサイズは考慮しない
+CanvasManager.prototype.arrangeAutoLayers = function(){
+	var width = Number(this.spinTileW.value);
+	var height = Number(this.spinTileH.value);
+	var maxX = Number(this.spinNumX.value);
+	var maxY = Number(this.spinNumY.value);
+	var posX = 0;
+	var posY = 0;
+	var cnt = maxX * maxY;
+	var i = 0;
+
+	loop:for(var y = 0; y < maxY; y++){
+		for(var x = 0; x < maxX; x++){
+			if(this.layers.length <= i){
+				break loop;
+			}
+			this.layers[i].setPos(posX, posY);
+			posX += width;
+			i++;
+		}
+		posX = 0;
+		posY += height;
+	}
+	this.repaint();
 };
 
 // 再描画
@@ -248,6 +290,7 @@ CanvasManager.prototype.drawLayers = function(){
 
 // 文章描画
 CanvasManager.prototype.drawSentence = function(){
+	this.context.fillStyle = 'rgb(0,0,0)';
 	this.context.font = this.spinStc.value + 'px serif';
 	this.context.textAlign = 'left';
 	this.context.fillText(this.sentence, 0, this.spinStc.value);
