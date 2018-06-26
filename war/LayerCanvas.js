@@ -73,11 +73,6 @@ function onUp(e) {
 	cvMgr.dragLayer = -1; // ドラッグ終了
 };
 
-// 文章フォントサイズ スピンボックス変化
-function onChange_spinStc() {
-	cvMgr.repaint();
-}
-
 // 幅スピンボックス変化
 function onChange_spinCvW() {
 	var width = cvMgr.spinTileW.value;
@@ -202,7 +197,7 @@ var CanvasManager = function(stcSize, width, height, numX, numY){
 	this.canvas.addEventListener('mousemove', onMove, false);
 	this.canvas.addEventListener('mouseup', onUp, false);
 	this.spinStc.value = stcSize;
-	this.spinStc.addEventListener('change', onChange_spinStc, false);
+	this.spinStc.addEventListener('change', onChange_spinCvH, false);
 	this.spinTileW.value = width;
 	this.spinTileW.addEventListener('change', onChange_spinCvW, false);
 	this.spinTileH.value = height;
