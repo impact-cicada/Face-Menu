@@ -280,6 +280,7 @@ CanvasManager.prototype.drawLayers = function(){
 		layer = this.layers[i];
 		console.log('drawLayers() ' + layer.image.src + ' x:'+layer.cvX + ' y:'+(layer.cvY + stcSize) + ' w:'+layer.cvW + ' h:'+layer.cvH);
 		this.context.drawImage(layer.image, layer.cvX, (layer.cvY + stcSize), layer.cvW, layer.cvH);
+		this.drawNumber(layer.cvX, (layer.cvY + stcSize), layer.cvW, layer.cvH, Number(i)+1);
 	}
 };
 
@@ -289,4 +290,13 @@ CanvasManager.prototype.drawSentence = function(){
 	this.context.font = this.spinStc.value + 'px serif';
 	this.context.textAlign = 'left';
 	this.context.fillText(this.sentence, 0, this.spinStc.value);
-}
+};
+
+// 番号描画
+CanvasManager.prototype.drawNumber = function(imgX, imgY, imgWidth, imgHeight, num){
+	this.context.fillStyle = 'rgb(0,0,0)';
+	this.context.font = '16px serif';
+	this.context.textAlign = 'center';
+	this.context.fillText(num, imgX + imgWidth / 2, imgY + imgHeight - 5);
+};
+
